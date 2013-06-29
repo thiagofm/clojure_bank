@@ -1,0 +1,5 @@
+[
+{:db/id #db/id[:db.part/user -1], :creditcard/name "Thiago Massa"}
+{:db/id #db/id[:db.part/user -1], :creditcard/name "Edward Wible"}
+{:db/id #db/id[:db.part/user -1], :creditcard/name "Konrad Scorciapino"}
+]

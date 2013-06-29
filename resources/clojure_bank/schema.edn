@@ -1,0 +1,24 @@
+[
+ ;; creditcard
+ {:db/id #db/id[:db.part/db]
+  :db/ident :creditcard/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/doc "The creditcard's name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :creditcard/number
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "The creditcard's number"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :creditcard/cvv
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "The creditcard's cvv"
+  :db.install/_attribute :db.part/db}
+]
