@@ -13,6 +13,7 @@
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/doc "The creditcard's number"
+  :db/unique :db.unique/value
   :db.install/_attribute :db.part/db}
 
  {:db/id #db/id[:db.part/db]
@@ -20,5 +21,19 @@
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/doc "The creditcard's cvv"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :creditcard/outstanding_balance
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "The creditcard's outstanding balance"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :creditcard/available_balance
+  :db/valueType :db.type/double
+  :db/cardinality :db.cardinality/one
+  :db/doc "The creditcard's available balance"
   :db.install/_attribute :db.part/db}
 ]

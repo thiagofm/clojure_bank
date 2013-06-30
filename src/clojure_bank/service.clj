@@ -2,23 +2,30 @@
     (:require [io.pedestal.service.http :as bootstrap]
               [io.pedestal.service.http.route :as route]
               [io.pedestal.service.http.body-params :as body-params]
+              [clojure.data.json :as json]
               [io.pedestal.service.http.route.definition :refer [defroutes]]
-              [clojure_bank.peer :as peer :refer [results]]
+              [clojure_bank.peer :as peer :refer [find-creditcard-by-number save-creditcard]]
               [ring.util.response :as ring-resp]))
 
-(defn about-page
+(defn show-creditcard
   [request]
-  (ring-resp/response (format "Clojure %s" (clojure-version))))
+  (let [number (get-in request [:path-params :number])]
+    (ring-resp/response (json/write-str (find-creditcard-by-number number)))))
 
-(defn home-page
+; Todo:
+; I probably need a custom interceptor to be able to use the body as a query string parameter
+; maybe I should propose a better way for pedestal.io to deal with parameters, more rails like
+; or offer both alternatives just in case people want to work it separately
+(defn create-creditcard
   [request]
-  (ring-resp/response (str "Hello " (results))))
+  (let [creditcard (get-in request [:query-params])]
+    (save-creditcard creditcard)
+    {:status 201}))
 
 (defroutes routes
-  [[["/" {:get home-page}
-     ;; Set default interceptors for /about and any other paths under /
-     ^:interceptors [(body-params/body-params) bootstrap/html-body]
-     ["/about" {:get about-page}]]]])
+  [[["/creditcard" {:post create-creditcard}]]
+   [["/creditcard/:number" {:get show-creditcard}
+     ^:interceptors [(body-params/body-params) bootstrap/html-body]]]])
 
 ;; You can use this fn or a per-request fn via io.pedestal.service.http.route/url-for
 (def url-for (route/url-for-routes routes))
@@ -47,5 +54,4 @@
               ;; to enable Tomcat)
               ;;::bootstrap/host "localhost"
               ::bootstrap/type :jetty
-              ::bootstrap/port 8080}
-)
+              ::bootstrap/port 8080})
