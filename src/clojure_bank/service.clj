@@ -4,7 +4,7 @@
               [io.pedestal.service.http.body-params :as body-params]
               [clojure.data.json :as json]
               [io.pedestal.service.http.route.definition :refer [defroutes]]
-              [clojure_bank.peer :as peer :refer [find-creditcard-by-number save-creditcard]]
+              [clojure_bank.peer :as peer :refer [find-creditcard-by-number save-creditcard update-balance]]
               [ring.util.response :as ring-resp]))
 
 (defn show-creditcard
@@ -22,8 +22,26 @@
     (save-creditcard creditcard)
     {:status 201}))
 
+(defn send-funds
+  "send funds from outside the account"
+  [request]
+  (let
+    [amount (get-in request [:query-params :amount]) creditcard-number (get-in request [:path-params :number]) ]
+    (update-balance creditcard-number (- (read-string amount)))
+    {:status 204}))
+
+(defn receive-funds
+  "receive funds to the account"
+  [request]
+  (let
+    [amount (get-in request [:query-params :amount]) creditcard-number (get-in request [:path-params :number]) ]
+    (update-balance creditcard-number (+ (read-string amount)))
+    {:status 204}))
+
 (defroutes routes
   [[["/creditcard" {:post create-creditcard}]]
+   [["/creditcard/:number/send" {:put send-funds}]]
+   [["/creditcard/:number/receive" {:put receive-funds}]]
    [["/creditcard/:number" {:get show-creditcard}
      ^:interceptors [(body-params/body-params) bootstrap/html-body]]]])
 

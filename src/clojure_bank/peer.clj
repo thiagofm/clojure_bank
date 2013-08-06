@@ -88,6 +88,6 @@
         (d/transact
          conn
          [{:creditcard/number creditcard-number ;; this finds the existing entity
-           :db/id #db/id[:db.part/db]  ;; will be replaced by exiting id
+           :db/id #db/id[:db.part/db]  ;; will be replaced by existing id
            :creditcard/outstanding_balance outstanding-balance
            :creditcard/available_balance avaialable-balance }])))))
