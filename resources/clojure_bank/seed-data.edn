@@ -1,6 +1,6 @@
 [
 {
-  :db/id #db/id[:db.part/user -1],
+  :db/id #db/id[:db.part/db -1],
   :creditcard/name "Thiago Massa",
   :creditcard/number "0000000000",
   :creditcard/cvv "000",
@@ -8,7 +8,7 @@
   :creditcard/outstanding_balance 100.0
 }
 {
-  :db/id #db/id[:db.part/user -2],
+  :db/id #db/id[:db.part/db -2],
   :creditcard/name "Edward Wible",
   :creditcard/number "0000000001",
   :creditcard/cvv "000",
@@ -16,7 +16,7 @@
   :creditcard/outstanding_balance 100.0
 }
 {
-  :db/id #db/id[:db.part/user -3],
+  :db/id #db/id[:db.part/db -3],
   :creditcard/name "Konrad Scorciapino",
   :creditcard/number "0000000002",
   :creditcard/cvv "000"

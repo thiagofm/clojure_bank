@@ -5,7 +5,7 @@
   :db/valueType :db.type/string
   :db/cardinality :db.cardinality/one
   :db/fulltext true
-  :db/doc "The creditcard's name"
+  :db/doc "The creditcard's holder name"
   :db.install/_attribute :db.part/db}
 
  {:db/id #db/id[:db.part/db]
@@ -14,6 +14,7 @@
   :db/cardinality :db.cardinality/one
   :db/doc "The creditcard's number"
   :db/unique :db.unique/value
+  :db/index true
   :db.install/_attribute :db.part/db}
 
  {:db/id #db/id[:db.part/db]

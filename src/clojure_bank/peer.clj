@@ -49,7 +49,7 @@
   (let
     [conn (d/connect uri) ci (namespace-hash-map "creditcard" creditcard-info)]
       ; the merge with id happens because datomic expects me to set up an id to every entity I save
-      (d/transact conn [(convert-parameters-to-type (merge ci {:db/id #db/id[:db.part/user]})
+      (d/transact conn [(convert-parameters-to-type (merge ci {:db/id #db/id[:db.part/creditcard]})
                                                     [:outstanding_balance :available_balance])])))
 
 ; Finds a record in datomic where the creditcard/number is the passed
@@ -61,3 +61,33 @@
     (decorate
       (ffirst
         (q '[:find ?e :in $ ?number :where [?e :creditcard/number ?number]] (d/db conn) number)))))
+
+; Balance
+(defn get-balances
+  "returns the outstanding and available balance given a creditcard"
+  [creditcard-number]
+  (select-keys (find-creditcard-by-number creditcard-number) [:creditcard/outstanding_balance :creditcard/available_balance]))
+
+(defn compute-outstanding-balance
+  "computes the outstanding balance"
+  [old-outstanding-balance added-amount]
+  (- old-outstanding-balance added-amount))
+
+(defn compute-available-balance
+  "computes the avaialable balance"
+  [old-available-balance added-amount]
+  (+ old-available-balance added-amount))
+
+(defn update-balance
+  [creditcard-number amount]
+  (let [old-outstanding-balance (get-in (get-balances creditcard-number) [:creditcard/available_balance]) old-available-balance (get-in (get-balances creditcard-number) [:creditcard/outstanding_balance])]
+    (let [outstanding-balance (compute-outstanding-balance old-outstanding-balance amount) avaialable-balance (compute-available-balance old-available-balance amount)]
+      (init-db)
+      (let
+        [conn (d/connect uri)]
+        (d/transact
+         conn
+         [{:creditcard/number creditcard-number ;; this finds the existing entity
+           :db/id #db/id[:db.part/db]  ;; will be replaced by exiting id
+           :creditcard/outstanding_balance outstanding-balance
+           :creditcard/available_balance avaialable-balance }])))))
