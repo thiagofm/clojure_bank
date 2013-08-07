@@ -50,7 +50,7 @@
     [conn (d/connect uri) ci (namespace-hash-map "creditcard" creditcard-info)]
       ; the merge with id happens because datomic expects me to set up an id to every entity I save
       (d/transact conn [(convert-parameters-to-type (merge ci {:db/id #db/id[:db.part/db]})
-                                                    [:outstanding_balance :available_balance])])))
+                                                    [:creditcard/outstanding_balance :creditcard/available_balance])])))
 
 ; Finds a record in datomic where the creditcard/number is the passed
 ; number. It costed me a bunch of hours to get how to set up a
