@@ -49,7 +49,7 @@
   (let
     [conn (d/connect uri) ci (namespace-hash-map "creditcard" creditcard-info)]
       ; the merge with id happens because datomic expects me to set up an id to every entity I save
-      (d/transact conn [(convert-parameters-to-type (merge ci {:db/id #db/id[:db.part/creditcard]})
+      (d/transact conn [(convert-parameters-to-type (merge ci {:db/id #db/id[:db.part/db]})
                                                     [:outstanding_balance :available_balance])])))
 
 ; Finds a record in datomic where the creditcard/number is the passed
@@ -80,7 +80,7 @@
 
 (defn update-balance
   [creditcard-number amount]
-  (let [old-outstanding-balance (get-in (get-balances creditcard-number) [:creditcard/available_balance]) old-available-balance (get-in (get-balances creditcard-number) [:creditcard/outstanding_balance])]
+  (let [old-outstanding-balance (get-in (get-balances creditcard-number) [:creditcard/outstanding_balance]) old-available-balance (get-in (get-balances creditcard-number) [:creditcard/available_balance])]
     (let [outstanding-balance (compute-outstanding-balance old-outstanding-balance amount) avaialable-balance (compute-available-balance old-available-balance amount)]
       (init-db)
       (let
